@@ -23,10 +23,24 @@ export default function Authenticated({ auth, header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("agendamentos.index")}
+                                    active={route().current(
+                                        "agendamentos.index"
+                                    )}
                                 >
-                                    Dashboard
+                                    Agendamentos
+                                </NavLink>
+                                <NavLink
+                                    href={route("medicos.index")}
+                                    active={route().current("medicos.index")}
+                                >
+                                    Médicos
+                                </NavLink>
+                                <NavLink
+                                    href={route("pacientes.index")}
+                                    active={route().current("pacientes.index")}
+                                >
+                                    Pacientes
                                 </NavLink>
                             </div>
                         </div>
@@ -127,8 +141,8 @@ export default function Authenticated({ auth, header, children }) {
                 >
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink
-                            href={route("dashboard")}
-                            active={route().current("dashboard")}
+                            href={route("agendamentos.index")}
+                            active={route().current("agendamentos.index")}
                         >
                             Dashboard
                         </ResponsiveNavLink>
@@ -161,14 +175,21 @@ export default function Authenticated({ auth, header, children }) {
             </nav>
 
             {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <header className="bg-gray">
+                    <div className="max-w-7xl mx-auto pt-4 px-4 sm:px-6 lg:px-8">
                         {header}
                     </div>
                 </header>
             )}
 
-            <main>{children}</main>
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {children}
+            </main>
+            <footer className="px-4 sm:px-6 lg:px-8 w-screen h-10 flex items-center justify-end ">
+                <div className="max-w-7xl px-4 text-sm text-gray-700 dark:text-gray-500">
+                    <p>Feito por Miriam Amaral</p>
+                </div>
+            </footer>
         </div>
     );
 }

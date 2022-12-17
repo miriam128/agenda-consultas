@@ -13,10 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('agendamentos', function (Blueprint $table) {
+        Schema::create('agendamento', function (Blueprint $table) {
             $table->id();
             $table->foreignId('paciente_id')->constrained('paciente')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('medico_id')->constrained('medico')->onUpdate('cascade')->onDelete('cascade');
+            $table->date('data');
+            $table->time('hora');
+            $table->string('endereco');
+            $table->string('filial_nome');
             $table->timestamps();
         });
     }
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('agendamentos');
+        Schema::dropIfExists('agendamento');
     }
 };
