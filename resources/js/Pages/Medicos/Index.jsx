@@ -14,7 +14,7 @@ export default function Medicos(props) {
                     <h2 className="font-black font-sans text-2xl text-gray-800 leading-tight flex items-center">
                         Médicos
                     </h2>
-                    <Link href="/medicos/novo-medico" className="btn-indigo">
+                    <Link href="/medicos/create" className="btn-indigo">
                         + Novo Médico
                     </Link>
                 </div>

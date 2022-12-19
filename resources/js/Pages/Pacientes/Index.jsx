@@ -14,10 +14,7 @@ export default function Pacientes(props) {
                     <h2 className="font-black font-sans text-2xl text-gray-800 leading-tight flex items-center">
                         Pacientes
                     </h2>
-                    <Link
-                        href="/pacientes/novo-paciente"
-                        className="btn-indigo"
-                    >
+                    <Link href="/pacientes/create" className="btn-indigo">
                         + Novo paciente
                     </Link>
                 </div>

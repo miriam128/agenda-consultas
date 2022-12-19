@@ -7,10 +7,10 @@ import { Link } from "@inertiajs/inertia-react";
 
 export default function NovoMedico(props) {
     const { data, setData, post, processing, reset, errors } = useForm({
-        nome: "",
-        email: "",
-        telefone: "",
-        endereco: "",
+        nome: null,
+        email: null,
+        telefone: null,
+        endereco: null,
     });
 
     const onSubmit = (e) => {

@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import InputError from "@/Components/InputError";
-import PrimaryButton from "@/Components/PrimaryButton";
 import { useForm, Head } from "@inertiajs/inertia-react";
 import { Link } from "@inertiajs/inertia-react";
 
-export default function NovoAgendamento(props) {
+export default function Create(props) {
+    const pacientes = props.pacientes;
+    const medicos = props.medicos;
+
     const { data, setData, post, processing, reset, errors } = useForm({
         pacienteId: "",
         medicoId: "",
@@ -17,9 +18,11 @@ export default function NovoAgendamento(props) {
 
     function onSubmit(event) {
         event.preventDefault();
-        post(route("agendamento.store"), {
-            onSuccess: () => route("pacientes.index"),
-        });
+        if (data.pacienteId && data.medicoId) {
+            post(route("agendamentos.store"), {
+                onSucess: () => route("agendamentos.index"),
+            });
+        }
     }
 
     return (
@@ -52,7 +55,7 @@ export default function NovoAgendamento(props) {
                         <form onSubmit={onSubmit}>
                             <div className="mb-6">
                                 {/* primeira fileira */}
-                                <div className="grid grid-flow-col auto-cols gap-4 mb-6">
+                                <div className="grid grid-flow-col auto-cols-2 gap-4 mb-6">
                                     <div>
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                             Nome do paciente{" "}
@@ -71,10 +74,21 @@ export default function NovoAgendamento(props) {
                                             }
                                             required
                                         >
-                                            <option>Miriam</option>
-                                            <option>Igor</option>
-                                            <option>Francisca</option>
+                                            <option value="">
+                                                Selecione um paciente
+                                            </option>
+                                            {pacientes.map((paciente) => (
+                                                <option
+                                                    key={paciente.id}
+                                                    value={paciente.id}
+                                                >
+                                                    {paciente.nome}
+                                                </option>
+                                            ))}
                                         </select>
+                                        {errors.pacienteId && (
+                                            <div>{errors.pacienteId}</div>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -85,7 +99,7 @@ export default function NovoAgendamento(props) {
                                             </span>
                                         </label>
                                         <select
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             onChange={(event) =>
                                                 setData(
                                                     "medicoId",
@@ -94,14 +108,22 @@ export default function NovoAgendamento(props) {
                                             }
                                             required
                                         >
-                                            <option>Miriam</option>
-                                            <option>Igor</option>
-                                            <option>Francisca</option>
+                                            <option value="">
+                                                Selecione um médico
+                                            </option>
+                                            {medicos.map((medico) => (
+                                                <option
+                                                    key={medico.id}
+                                                    value={medico.id}
+                                                >
+                                                    {medico.nome}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-flow-col auto-cols gap-4 mb-6">
+                                <div className="grid grid-flow-col auto-cols-2 gap-4 mb-6">
                                     <div>
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                             Data
@@ -114,12 +136,12 @@ export default function NovoAgendamento(props) {
                                             type="date"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             required
-                                            onChange={(event) =>
+                                            onChange={(event) => {
                                                 setData(
                                                     "data",
                                                     event.target.value
-                                                )
-                                            }
+                                                );
+                                            }}
                                         />
                                     </div>
                                     <div>
@@ -132,14 +154,15 @@ export default function NovoAgendamento(props) {
                                         </label>
                                         <input
                                             type="time"
+                                            step="2"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             required
-                                            onChange={(event) =>
+                                            onChange={(event) => {
                                                 setData(
                                                     "hora",
                                                     event.target.value
-                                                )
-                                            }
+                                                );
+                                            }}
                                         />
                                     </div>
                                 </div>
@@ -189,7 +212,7 @@ export default function NovoAgendamento(props) {
 
                             <div className="flex w-auto gap-3">
                                 <Link
-                                    href="/pacientes/novo-paciente"
+                                    href={route("agendamentos.index")}
                                     className="flex items-center gap-1 text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                 >
                                     <svg

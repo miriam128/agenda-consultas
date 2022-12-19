@@ -8,16 +8,6 @@ use Inertia\Inertia;
 
 class PacienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-
-        return Inertia::render('Pacientes/Index', ['pacientes' => Paciente::latest()->get()]);
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -27,7 +17,18 @@ class PacienteController extends Controller
     public function create()
     {
 
-        return Inertia::render('Pacientes/NovoPaciente', []);
+        return Inertia::render('Pacientes/Create', []);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+
+        return Inertia::render('Pacientes/Index', ['pacientes' => Paciente::latest()->get()]);
     }
 
     /**
@@ -53,10 +54,39 @@ class PacienteController extends Controller
         $paciente->endereco = $request->input('endereco');
         $paciente->save();
 
-        return Inertia::render('Pacientes/Index', ['paciente' => $paciente], 201);
+        return Inertia::render('Pacientes/Index', ['pacientes' => Paciente::latest()->get()]);
         // } else {
 
 
         // }
+    }
+
+    public function edit(int $pacienteId)
+    {
+
+        return Inertia::render('Pacientes/Edit', ['paciente' => Paciente::findOrFail($pacienteId)], 200);
+    }
+
+    public function update(Request $request, int $pacienteId)
+    {
+        $validated = $request->validate([
+            'nome' => 'required|string|max:60',
+            'email' => 'required|string|max:60',
+            'telefone' => 'required|string|max:20',
+            'endereco' => 'required|string|max:100',
+        ]);
+
+        $paciente = Paciente::findOrFail($pacienteId);
+        $paciente->update($validated);
+
+        return redirect(route('pacientes.index'));
+    }
+
+    public function destroy(int $pacienteId)
+    {
+        $paciente = Paciente::findOrFail($pacienteId);
+        $paciente->delete();
+
+        return redirect(route('pacientes.index'));
     }
 }

@@ -1,24 +1,27 @@
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import InputError from "@/Components/InputError";
-import PrimaryButton from "@/Components/PrimaryButton";
 import { useForm, Head } from "@inertiajs/inertia-react";
 import { Link } from "@inertiajs/inertia-react";
 
-export default function NovoPaciente(props) {
-    const { data, setData, post, processing, reset, errors } = useForm({
-        nome: "",
-        email: "",
-        telefone: "",
-        endereco: "",
+export default function Edit(props) {
+    const pacientes = props.pacientes;
+
+    const medicos = props.medicos;
+    const agendamento = props.agendamento;
+
+    const { data, setData, put, processing, reset, errors } = useForm({
+        pacienteId: agendamento.paciente_id,
+        medicoId: agendamento.medico_id,
+        data: agendamento.data,
+        hora: agendamento.hora,
+        endereco: agendamento.endereco,
+        filialNome: agendamento.filial_nome,
     });
 
-    const submit = (e) => {
-        e.preventDefault();
-        post(route("pacientes.store"), {
-            onSuccess: () => route("pacientes.index"),
-        });
-    };
+    function onSubmit(event) {
+        event.preventDefault();
+        put(route("agendamentos.update", agendamento.id));
+    }
 
     return (
         <AuthenticatedLayout
@@ -27,16 +30,17 @@ export default function NovoPaciente(props) {
             header={
                 <div className="flex justify-between items center">
                     <h2 className="font-black font-sans text-2xl text-gray-800 leading-tight flex items-center">
-                        Cadastrar novo paciente
+                        Editar agendamento
                     </h2>
                 </div>
             }
         >
-            <Head title="Agendar consulta" />
+            <Head title="Editar agendamento" />
 
             <div className="py-6 z-0">
                 <div className="bg-white shadow-sm sm:rounded-lg">
                     <div className="mx-auto p-4 sm:p-6 lg:p-8">
+                        {/* aviso em amarelo */}
                         <div className="bg-yellow-200 h-14 mb-5 flex items-center p-4">
                             <p>
                                 Os campos marcados com
@@ -44,24 +48,140 @@ export default function NovoPaciente(props) {
                                 preenchimento obrigatório.
                             </p>
                         </div>
-                        <form onSubmit={submit}>
+
+                        {/* formulário */}
+                        <form onSubmit={onSubmit}>
                             <div className="mb-6">
-                                <div className="grid grid-flow-col auto-cols gap-4 mb-6">
+                                {/* primeira fileira */}
+                                <div className="grid grid-flow-col auto-cols-2 gap-4 mb-6">
                                     <div>
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Nome do(a) paciente(a){" "}
+                                            Nome do paciente{" "}
+                                            <span className="text-red-500">
+                                                {" "}
+                                                *{" "}
+                                            </span>
+                                        </label>
+                                        <select
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            onChange={(event) =>
+                                                setData(
+                                                    "pacienteId",
+                                                    event.target.value
+                                                )
+                                            }
+                                            required
+                                        >
+                                            {pacientes.map((paciente) => (
+                                                <option
+                                                    key={paciente.id}
+                                                    value={paciente.id}
+                                                    selected={
+                                                        paciente.id ===
+                                                        agendamento.paciente_id
+                                                    }
+                                                >
+                                                    {paciente.nome}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                            Nome do médico{" "}
+                                            <span className="text-red-500">
+                                                {" "}
+                                                *{" "}
+                                            </span>
+                                        </label>
+                                        <select
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            onChange={(event) =>
+                                                setData(
+                                                    "medicoId",
+                                                    event.target.value
+                                                )
+                                            }
+                                            required
+                                        >
+                                            {medicos.map((medico) => (
+                                                <option
+                                                    selected={
+                                                        medico.id ===
+                                                        agendamento.medico_id
+                                                    }
+                                                    key={medico.id}
+                                                    value={medico.id}
+                                                >
+                                                    {medico.nome}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-flow-col auto-cols-2 gap-4 mb-6">
+                                    <div>
+                                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                            Data
                                             <span className="text-red-500">
                                                 {" "}
                                                 *{" "}
                                             </span>
                                         </label>
                                         <input
+                                            value={data.data}
+                                            type="date"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            required
+                                            onChange={(event) => {
+                                                setData(
+                                                    "data",
+                                                    event.target.value
+                                                );
+                                            }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                            Hora
+                                            <span className="text-red-500">
+                                                {" "}
+                                                *{" "}
+                                            </span>
+                                        </label>
+                                        <input
+                                            value={data.hora}
+                                            type="time"
+                                            step="2"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            required
+                                            onChange={(event) => {
+                                                setData(
+                                                    "hora",
+                                                    event.target.value
+                                                );
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid grid-flow-col auto-cols gap-4">
+                                    <div>
+                                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                            Filial{" "}
+                                            <span className="text-red-500">
+                                                {" "}
+                                                *{" "}
+                                            </span>
+                                        </label>
+                                        <input
+                                            value={data.filialNome}
                                             type="text"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             required
                                             onChange={(event) =>
                                                 setData(
-                                                    "nome",
+                                                    "filialNome",
                                                     event.target.value
                                                 )
                                             }
@@ -69,44 +189,14 @@ export default function NovoPaciente(props) {
                                     </div>
                                     <div>
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            E-mail
+                                            Endereço{" "}
+                                            <span className="text-red-500">
+                                                {" "}
+                                                *{" "}
+                                            </span>
                                         </label>
                                         <input
-                                            type="email"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            required
-                                            onChange={(event) =>
-                                                setData(
-                                                    "email",
-                                                    event.target.value
-                                                )
-                                            }
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-flow-col auto-cols gap-4">
-                                    <div>
-                                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Telefone
-                                        </label>
-                                        <input
-                                            type="tel"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            required
-                                            onChange={(event) =>
-                                                setData(
-                                                    "telefone",
-                                                    event.target.value
-                                                )
-                                            }
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Endereço
-                                        </label>
-                                        <input
+                                            value={data.endereco}
                                             type="text"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             required
@@ -123,7 +213,7 @@ export default function NovoPaciente(props) {
 
                             <div className="flex w-auto gap-3">
                                 <Link
-                                    href="/pacientes/novo-paciente"
+                                    href={route("agendamentos.index")}
                                     className="flex items-center gap-1 text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                 >
                                     <svg
@@ -157,7 +247,7 @@ export default function NovoPaciente(props) {
                                         />
                                     </svg>
 
-                                    <span>Cadastrar</span>
+                                    <span>Editar</span>
                                 </button>
                             </div>
                         </form>

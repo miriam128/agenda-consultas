@@ -1,8 +1,7 @@
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/inertia-react";
 import AgendamentosTable from "./AgendamentosTable";
-import { Link } from "@inertiajs/inertia-react";
+import { Link, Head } from "@inertiajs/inertia-react";
 
 export default function Agendamentos(props) {
     return (
@@ -14,7 +13,7 @@ export default function Agendamentos(props) {
                     <h2 className="font-black font-sans text-2xl text-gray-800 leading-tight flex items-center">
                         Agendamentos
                     </h2>
-                    <Link href="/novo-agendamento" className="btn-indigo">
+                    <Link href="/agendamentos/create" className="btn-indigo">
                         Agendar consulta
                     </Link>
                 </div>
