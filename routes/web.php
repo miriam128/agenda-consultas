@@ -25,9 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     //Agendamentos
+    Route::get('/', [AgendamentoController::class, 'index'])->name('agendamentos.index');
     Route::get('/agendamentos/create', [AgendamentoController::class, 'create'])->name('agendamentos.create');
     Route::get('/agendamentos', [AgendamentoController::class, 'index'])->name('agendamentos.index');
-    Route::get('/', [AgendamentoController::class, 'index'])->name('agendamentos.index');
     Route::post('/agendamentos', [AgendamentoController::class, 'store'])->name('agendamentos.store');
     Route::get('/agendamentos/{agendamentoId}/edit', [AgendamentoController::class, 'edit'])->name('agendamentos.edit');
     Route::put('/agendamentos/{agendamentoId}', [AgendamentoController::class, 'update'])->name('agendamentos.update');
